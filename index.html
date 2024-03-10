@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор повышения уровня</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px; /* Ограничение ширины контейнера */
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        input {
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            max-height: 400px; /* Ограничение высоты контейнера */
+            overflow-y: auto; /* Добавление полосы прокрутки по вертикали */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Калькулятор повышения уровня</h2>
+        <div>
+            <label for="startDate">Дата начала:</label>
+            <input type="date" id="startDate">
+        </div>
+        <div>
+            <label for="endDate">Дата окончания:</label>
+            <input type="date" id="endDate" value="2024-05-23">
+        </div>
+        <div>
+            <label for="currentLevel">Текущий уровень на выбранную дату:</label>
+            <input type="number" id="currentLevel" min="1" placeholder="Enter your current level" value="0">
+        </div>
+        <button onclick="calculate()">Рассчитать</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculate() {
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            const currentLevel = parseInt(document.getElementById('currentLevel').value);
+
+            if (isNaN(currentLevel) || isNaN(startDate) || isNaN(endDate) || startDate >= endDate) {
+                alert('Please enter valid numbers and dates.');
+                return;
+            }
+
+            const resultElement = document.getElementById('result');
+            resultElement.innerHTML = '';
+
+            const totalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+            const totalLevels = 200;
+            const levelsPerDay = (totalLevels - currentLevel) / totalDays;
+
+            let currentDate = new Date(startDate);
+            let currentTarget = currentLevel;
+
+            while (currentDate <= endDate) {
+                const formattedDate = currentDate.toLocaleDateString('en-US');
+                resultElement.innerHTML += `<p>${formattedDate}: нужно достичь уровня ${Math.round(currentTarget)}.</p>`;
+                currentTarget += levelsPerDay;
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+        }
+    </script>
+</body>
+</html>
